@@ -1,21 +1,18 @@
-FROM node:16 AS builder
-
-WORKDIR /app
-
-COPY package.json ./
-
-# Install production dependencies in batches
-RUN npm install --only=production --no-audit --no-fund express
-RUN npm install --only=production --no-audit --no-fund react react-dom
-# Add more RUN commands for other major dependencies
-
-COPY . .
-
 FROM node:16-alpine
 
 WORKDIR /app
 
-COPY --from=builder /app .
+# Copy package.json and package-lock.json (if available)
+COPY package*.json ./
+
+# Display the content of the directory
+RUN ls -la
+
+# Install dependencies
+RUN npm ci --only=production --no-audit --no-fund
+
+# Copy the rest of the application
+COPY . .
 
 EXPOSE 3000
 

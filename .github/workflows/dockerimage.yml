@@ -51,6 +51,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
+          file: ./Dockerfile
           load: true
           tags: ${{ env.APP_NAME }}:${{ env.APP_BUILD }}
           build-args: |
@@ -129,3 +130,15 @@ jobs:
       - name: Chores
         if: (success() || failure())
         run: docker compose down
+
+      - name: List repository contents
+        run: ls -la
+
+      - name: Display package.json content
+        run: cat package.json || echo "package.json not found"
+
+      - name: Display current working directory
+        run: pwd
+
+      - name: Display Docker Compose file content
+        run: cat docker-compose.yml || echo "docker-compose.yml not found"
