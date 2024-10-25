@@ -34,3 +34,14 @@ jobs:
         tags: |
           ghcr.io/${{ env.OWNER }}/woo-website-template-apiv2:latest
           ghcr.io/${{ env.OWNER }}/woo-website-template-apiv2:${{ github.sha }}
+        # Add these lines for more verbose output
+        build-args: |
+          BUILDKIT_INLINE_CACHE=1
+        outputs: type=docker,dest=/tmp/docker-image.tar
+    
+    # Add this step to see the full build log
+    - name: Show Docker build log
+      if: failure()
+      run: |
+        docker load --input /tmp/docker-image.tar
+        docker history ghcr.io/${{ env.OWNER }}/woo-website-template-apiv2:latest
