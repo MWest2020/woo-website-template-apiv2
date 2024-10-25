@@ -1,17 +1,20 @@
-FROM node:16-alpine
+FROM node:16-alpine AS builder
 
-# Install build dependencies
 RUN apk add --no-cache python3 make g++
 
 WORKDIR /app
 
-# Copy package files
 COPY package*.json ./
 
-# Install dependencies with more verbose output and increased memory
-RUN npm install --verbose --unsafe-perm=true --allow-root
+# Limit memory usage for npm
+ENV NODE_OPTIONS="--max-old-space-size=2048"
+RUN npm ci --only=production --no-audit --no-fund
 
-# Copy the rest of the application
+FROM node:16-alpine
+
+WORKDIR /app
+
+COPY --from=builder /app/node_modules ./node_modules
 COPY . .
 
 EXPOSE 3000
