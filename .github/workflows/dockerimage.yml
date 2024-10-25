@@ -28,5 +28,5 @@ jobs:
         context: .
         push: ${{ github.event_name != 'pull_request' }}
         tags: |
-          ghcr.io/${{ github.repository }}:latest
-          ghcr.io/${{ github.repository }}:${{ github.sha }}
+          ghcr.io/${{ github.repository_owner | lower }}/woo-website-template-apiv2:latest
+          ghcr.io/${{ github.repository_owner | lower }}/woo-website-template-apiv2:${{ github.sha }}
